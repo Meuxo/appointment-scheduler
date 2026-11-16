@@ -16,27 +16,11 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
-            password_hash TEXT NOT NULL,
-            role TEXT NOT NULL DEFAULT 'customer'  -- 'customer' or 'owner'
+            password_hash TEXT NOT NULL
         );
 
-        -- Business hours for each day of the week (0 = Monday ... 6 = Sunday)
-        CREATE TABLE IF NOT EXISTS business_hours (
-            day_of_week INTEGER PRIMARY KEY,
-            open_time TEXT NOT NULL,   -- "09:00"
-            close_time TEXT NOT NULL   -- "17:00"
-        );
-
-        -- UNIQUE(date, time) is what stops double bookings
-        CREATE TABLE IF NOT EXISTS appointments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL REFERENCES users(id),
-            date TEXT NOT NULL,        -- "2026-11-20"
-            time TEXT NOT NULL,        -- "10:30"
-            UNIQUE(date, time)
-        );
+        -- TODO: add tables for business hours and appointments
         """
     )
     conn.commit()

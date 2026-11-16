@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Scheduler</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><h1>Appointment Scheduler</h1></header>
+
+  <main>
+    <section class="card">
+      <h2>Log In</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Log In</button>
+      </form>
+      <p id="login-message" class="message"></p>
+    </section>
+
+    <section class="card">
+      <h2>Create Account</h2>
+      <form id="register-form">
+        <input type="text" id="reg-name" placeholder="Name" required>
+        <input type="email" id="reg-email" placeholder="Email" required>
+        <input type="password" id="reg-password" placeholder="Password" required>
+        <label><input type="checkbox" id="reg-owner"> I'm the business owner</label>
+        <button type="submit">Sign Up</button>
+      </form>
+      <p id="register-message" class="message"></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const user = await api("/api/login", "POST", {
+          email: document.getElementById("login-email").value,
+          password: document.getElementById("login-password").value,
+        });
+        localStorage.setItem("user", JSON.stringify(user));
+        window.location.href = user.role === "owner" ? "owner.html" : "customer.html";
+      } catch (err) {
+        showMessage("login-message", err.message, true);
+      }
+    });
+
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        await api("/api/register", "POST", {
+          name: document.getElementById("reg-name").value,
+          email: document.getElementById("reg-email").value,
+          password: document.getElementById("reg-password").value,
+          role: document.getElementById("reg-owner").checked ? "owner" : "customer",
+        });
+        showMessage("register-message", "Account created! You can log in now.");
+        e.target.reset();
+      } catch (err) {
+        showMessage("register-message", err.message, true);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -4,52 +4,49 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: Arial, sans-serif;
   background: #f4f4f4;
   color: #222;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background: #222;
-  color: white;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-main {
-  max-width: 600px;
-  margin: 24px auto;
-  padding: 0 16px;
-}
-
 .card {
+  width: 100%;
+  max-width: 340px;
+  margin: 16px;
+  padding: 28px;
   background: white;
-  padding: 20px;
-  margin-bottom: 20px;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-input, select, button {
+input {
   padding: 10px;
   font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 button {
-  background: #222;
+  padding: 10px;
+  font-size: 1rem;
   color: white;
+  background: #222;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -59,54 +56,23 @@ button:hover {
   background: #444;
 }
 
-button.link {
-  background: none;
-  text-decoration: underline;
+a {
+  color: #0066cc;
 }
 
-.slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-ul {
-  padding-left: 0;
-  list-style: none;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-li button {
-  padding: 6px 10px;
+.switch {
+  margin-top: 16px;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 .message {
-  margin-top: 10px;
+  min-height: 1em;
+  margin: 12px 0 0;
+  font-size: 0.9rem;
   color: green;
 }
 
 .message.error {
   color: #c00;
-}
-
-/* Phones */
-@media (max-width: 480px) {
-  header h1 {
-    font-size: 1.1rem;
-  }
-
-  li {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>You're logged in</h1>
+    <p id="who"></p>
+    <!-- TODO: appointment features go here -->
+    <a href="#" id="logout">Log out</a>
+  </main>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) window.location.href = "index.html";
+    document.getElementById("who").textContent = user ? user.email : "";
+
+    document.getElementById("logout").addEventListener("click", (e) => {
+      e.preventDefault();
+      localStorage.removeItem("user");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

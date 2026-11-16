@@ -3,65 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Appointment Scheduler</title>
+  <title>Log In</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header><h1>Appointment Scheduler</h1></header>
+  <main class="card">
+    <h1 id="title">Log In</h1>
 
-  <main>
-    <section class="card">
-      <h2>Log In</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="Email" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button type="submit">Log In</button>
-      </form>
-      <p id="login-message" class="message"></p>
-    </section>
+    <form id="form">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit" id="submit">Log In</button>
+    </form>
 
-    <section class="card">
-      <h2>Create Account</h2>
-      <form id="register-form">
-        <input type="text" id="reg-name" placeholder="Name" required>
-        <input type="email" id="reg-email" placeholder="Email" required>
-        <input type="password" id="reg-password" placeholder="Password" required>
-        <label><input type="checkbox" id="reg-owner"> I'm the business owner</label>
-        <button type="submit">Sign Up</button>
-      </form>
-      <p id="register-message" class="message"></p>
-    </section>
+    <p id="message" class="message"></p>
+
+    <p class="switch">
+      <span id="switch-text">Don't have an account?</span>
+      <a href="#" id="switch-link">Create account</a>
+    </p>
   </main>
 
-  <script src="app.js"></script>
   <script>
-    document.getElementById("login-form").addEventListener("submit", async (e) => {
+    let creating = false;
+
+    document.getElementById("switch-link").addEventListener("click", (e) => {
       e.preventDefault();
-      try {
-        const user = await api("/api/login", "POST", {
-          email: document.getElementById("login-email").value,
-          password: document.getElementById("login-password").value,
-        });
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = user.role === "owner" ? "owner.html" : "customer.html";
-      } catch (err) {
-        showMessage("login-message", err.message, true);
-      }
+      creating = !creating;
+      document.getElementById("title").textContent = creating ? "Create Account" : "Log In";
+      document.getElementById("submit").textContent = creating ? "Create Account" : "Log In";
+      document.getElementById("switch-text").textContent = creating ? "Already have an account?" : "Don't have an account?";
+      document.getElementById("switch-link").textContent = creating ? "Log in" : "Create account";
+      document.getElementById("message").textContent = "";
     });
 
-    document.getElementById("register-form").addEventListener("submit", async (e) => {
+    document.getElementById("form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      try {
-        await api("/api/register", "POST", {
-          name: document.getElementById("reg-name").value,
-          email: document.getElementById("reg-email").value,
-          password: document.getElementById("reg-password").value,
-          role: document.getElementById("reg-owner").checked ? "owner" : "customer",
-        });
-        showMessage("register-message", "Account created! You can log in now.");
-        e.target.reset();
-      } catch (err) {
-        showMessage("register-message", err.message, true);
+      const message = document.getElementById("message");
+      const res = await fetch(creating ? "/api/register" : "/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        message.textContent = data.detail;
+        message.className = "message error";
+      } else if (creating) {
+        document.getElementById("switch-link").click();
+        message.textContent = "Account created! You can log in now.";
+        message.className = "message";
+      } else {
+        localStorage.setItem("user", JSON.stringify(data));
+        window.location.href = "home.html";
       }
     });
   </script>
